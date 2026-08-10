@@ -1,0 +1,23 @@
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+slogs/
+logs/
+wandb/
+outputs/
+*.err
+*.out
+.DS_Store
+.env
+# only the published figure sets are committed; local scratch plots are not
+figures/exploratory/
+# unpublished manuscript sources
+LambdaLossPoseRanking_MLSBSubmission/
+# local-only follow-up experiments and provenance notes (not published)
+experiments/
+docs/EXPERIMENTS.md
+docs/REPRODUCIBILITY.md
+docs/README_original_draft.md
+# CAPRI-by-type analysis is not part of the paper -- kept locally, not published
+analysis/capri_by_type.py
+analysis/make_capri_type_template.py

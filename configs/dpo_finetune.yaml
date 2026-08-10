@@ -1,0 +1,31 @@
+_target_: models.score_model_mlsb.Score_Model
+
+seed: 42
+
+data:
+  dpo_list: null
+
+dpo:
+  batch_size: 1
+  num_workers: 1
+  max_epochs: 4
+  val_check_interval: 0.1
+  ckpt_path: ${work_dir}/checkpoints/best_checkpoint.ckpt
+  output_dir: ${work_dir}/checkpoints/dpo_ckpts
+  lr: 1e-4
+  weight_decay: 0.0
+  use_contrastive_loss: True
+  use_score: True
+  score_power: 1.0
+  beta: 0.1
+
+trainer:
+  devices: 4
+
+wandb:
+  project: LambdaDockScore
+  run_name: dpo_finetune_run
+
+callbacks:
+  model_checkpoint:
+    save_top_k: 8

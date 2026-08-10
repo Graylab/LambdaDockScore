@@ -1,0 +1,32 @@
+_target_: models.score_model_mlsb.Score_Model
+
+seed: 42
+
+data:
+  energy_finetune_list: null
+
+energy_conf:
+  num_workers: 1
+  max_epochs: 4
+  crop_size: 1200
+  use_esm: True
+  val_check_interval: 0.1
+  ckpt_path: null
+  output_dir: ${work_dir}/checkpoints/energy_finetune_ckpts
+  lr: 1e-4
+  weight_decay: 0.0
+  total_energy_loss_weight: 0.5
+  gt_loss_weight: 1.0
+  medium_pose_loss_weight: 1.0
+  acceptable_pose_loss_weight: 1.0
+  max_medium_poses: 2
+  max_acceptable_poses: 1
+  max_bad_poses: 0
+
+
+trainer:
+  devices: 4
+
+wandb:
+  project: LambdaDockScore
+  run_name: energy_finetune_run

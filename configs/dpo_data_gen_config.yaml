@@ -1,0 +1,58 @@
+# DPO Dataset Generation Configuration
+data:
+  # Model checkpoint path
+  ckpt: "${work_dir}/checkpoints/best_checkpoint.ckpt"
+  
+  # Dataset settings
+  dataset: "dips_train_hetero"
+  use_esm: true
+  
+  # Sampling settings
+  num_steps: 40
+  
+  # Noise scales
+  tr_noise_scale: 1.0
+  rot_noise_scale: 1.0
+  
+  # Sampling method
+  ode: false
+  
+  # Output settings
+  output_dir: "${work_dir}/data/DockDPO"
+
+  # Target DockQ threshold (used originally for making preference pairs, now not really used)
+  target_dockq: 0.23
+  
+  # Sample training set or select subset
+  sample_pose_set: -1  # -1 means use all samples
+  pose_set_subset_indices: [-1, -1] #If you don't want to subset, make both indices -1. Otherwise, use [start, end] indices to subset the pose generation dataset.
+
+  # Maximum attempts for GT perturbation
+  max_perturbation_attempts: 100
+
+  # Pairs per high DockQ sample
+  pairs_per_high_dockq_sample: 5
+  
+  # Perturbation ranges
+  perturbation_target_dockq: 0.23
+  tr_type: "normal"   # 'uniform' or 'normal'
+  rot_type: "normal"  # 'uniform' or 'normal'
+  max_translation: [1.0]  # in Angstroms
+  max_rotation: [7.0] # in degrees
+  num_perturbation_samples: [10]  # Number of perturbation samples to generate per ground truth sample
+
+  # Inference parameters
+  inference_target_dockq: 0.80
+  max_inference_attempts: 100
+  num_inference_samples: 10
+
+  # Data generation flags
+  generate_pairs: true
+  generate_ground_truth: true
+  generate_inference: true
+  generate_perturbed_gt: true
+
+
+distributed:
+  world_size: 1   # default, will be overridden at runtime
+  rank: 0         # default, will be overridden at runtime
