@@ -15,7 +15,7 @@ import torch.multiprocessing as mp
 from tqdm import tqdm
 
 # Add DFMDock and EuDockScore repos to path
-dfmdock_path = '/scratch/jgray21/rzhu41/DFMDock'
+dfmdock_path = os.environ.get('DFMDOCK_SRC', '../DFMDock')
 sys.path.insert(0, os.path.join(dfmdock_path, 'src'))
 
 from models.score_model_mlsb import Score_Model

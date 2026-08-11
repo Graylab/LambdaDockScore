@@ -11,7 +11,7 @@ import torch
 
 # Set TORCH_HOME to a directory on the scratch space to avoid filling up the home directory
 # This ensures that the large model files are downloaded to a location with sufficient space.
-torch_hub_dir = '/scratch/jgray21/rzhu41/.cache/torch'
+torch_hub_dir = os.environ.get('TORCH_HOME', os.path.expanduser('~/.cache/torch'))
 os.environ['TORCH_HOME'] = torch_hub_dir
 
 from tqdm import tqdm
@@ -21,7 +21,7 @@ from typing import Dict, Optional
 # It's assumed that the environment has DFMDock's dependencies.
 # We will dynamically add the DFMDock source to the path.
 import sys
-dfmdock_path = '/scratch/jgray21/rzhu41/DFMDock'
+dfmdock_path = os.environ.get('DFMDOCK_SRC', '../DFMDock')
 sys.path.insert(0, os.path.join(dfmdock_path, 'src'))
 from DockDPO_data_gen import PDBToTorchConverter
 

@@ -1,10 +1,10 @@
 #!/bin/bash
 
-cd /scratch/jgray21/rzhu41/eudockscore_versus_dfmdock
+cd "${WORKDIR:-.}"
 
-EXTRACTED_DIR="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/capri_decoys_extracted"
-TARGET_LIST="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/filtered_capri_targets_list/nonoverlapping_with_dips_complexes.txt"
-LMDB_DIR="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/eudockscore_lmdb"
+EXTRACTED_DIR="${EXTRACTED_DIR:-capri_decoys_extracted}"
+TARGET_LIST="${TARGET_LIST:-filtered_capri_targets_list/nonoverlapping_with_dips_complexes.txt}"
+LMDB_DIR="${LMDB_DIR:-eudockscore_lmdb}"
 
 mkdir -p "$LMDB_DIR"
 

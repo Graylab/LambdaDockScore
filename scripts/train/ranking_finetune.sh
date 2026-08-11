@@ -5,20 +5,25 @@
 #SBATCH --cpus-per-gpu=16
 #SBATCH --partition=a100,h100
 #SBATCH --gres=gpu:4
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 #SBATCH --time=72:00:00
 #SBATCH --qos=normal
-#SBATCH --error=/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_ranking_finetune/%j.err
-#SBATCH --output=/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_ranking_finetune/%j.out
+#SBATCH --error=slogs/ranking_finetune_%j.err
+#SBATCH --output=slogs/ranking_finetune_%j.out
+
+# Repo root: defaults to two levels up from this script; override REPO_ROOT to relocate.
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
+cd "$REPO_ROOT"
+mkdir -p slogs
 
 #### Environment and monitoring
-export WANDB_API_KEY="2f73cace6c721897dade5cffd271e3d1c1a95faa"
-export WANDB_MODE="online"
+# Set WANDB_API_KEY in your shell before submitting (do not hard-code secrets).
+export WANDB_MODE="${WANDB_MODE:-online}"
 export HYDRA_FULL_ERROR=1
 export MASTER_PORT=$(shuf -i 20000-30000 -n 1)
 
 # background GPU monitor
-LOG_GPU_FILE="/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_ranking_finetune/${SLURM_JOB_ID}_gpu_usage.log"
+LOG_GPU_FILE="slogs/ranking_finetune_${SLURM_JOB_ID}_gpu_usage.log"
 while true; do
     nvidia-smi >> "$LOG_GPU_FILE"
     sleep 15
@@ -26,11 +31,15 @@ done &
 MONITOR_PID=$!
 trap "kill $MONITOR_PID" EXIT
 
-#### Paths and config overrides
-CKPT_PATH="/scratch/jgray21/rzhu41/DFMDock/checkpoints/test_ckpts/dips_hetero/model_0.ckpt"
-RANKING_TRAIN_SET="/scratch/jgray21/rzhu41/DFMDock2/data/ranking_finetune/ranking_train_set_july17_removed_zero_bytes_removed_corrupted.json"
-RANKING_VAL_SET="/scratch/jgray21/rzhu41/DFMDock2/data/ranking_finetune/ranking_val_set_july17_removed_zero_bytes_removed_corrupted.json"
-OUTPUT_DIR="/scratch/jgray21/rzhu41/DFMDock/checkpoints/ranking_finetune_ckpts/${SLURM_JOB_ID}"
+#### Paths and config overrides (relative to REPO_ROOT; override any via env)
+# Baseline DFMDock checkpoint to fine-tune.
+CKPT_PATH="${CKPT_PATH:-checkpoints/dfmdock_baseline.ckpt}"
+# Train/val manifests: JSON lists of
+#   {"id", "training_pose": <gt .pt>, "ranking_poses": [[dockq, <decoy .pt>], ...]}
+# assembled from the data_gen output (see scripts/README.md).
+RANKING_TRAIN_SET="${RANKING_TRAIN_SET:-data/ranking_finetune/ranking_train_set.json}"
+RANKING_VAL_SET="${RANKING_VAL_SET:-data/ranking_finetune/ranking_val_set.json}"
+OUTPUT_DIR="${OUTPUT_DIR:-checkpoints/ranking_finetune_ckpts/${SLURM_JOB_ID}}"
 LR=1e-4
 NUM_GPUS=4
 EPOCHS=50
@@ -48,14 +57,14 @@ JOB_NAME="$EPOCHS epochs, lr=$LR, wd=$WEIGHT_DECAY, crop_size=$CROP_SIZE, rankin
 echo "Starting ranking-finetune job"
 echo "Job ID: $SLURM_JOB_ID"
 echo "Job name: $JOB_NAME"
-echo "Using checkpoint: $CKPT_DIR"
-echo "Data list: $DATA_LIST"
+echo "Checkpoint: $CKPT_PATH"
+echo "Train set: $RANKING_TRAIN_SET"
 echo "Output dir: $OUTPUT_DIR"
 echo "----------------------------------------"
 
 #### Launch distributed training with Hydra overrides
-torchrun --nproc_per_node=$NUM_GPUS --master_port=$MASTER_PORT /scratch/jgray21/rzhu41/DFMDock/src/Ranking_Net.py \
-    --config-path /scratch/jgray21/rzhu41/DFMDock/configs \
+torchrun --nproc_per_node=$NUM_GPUS --master_port=$MASTER_PORT src/Ranking_Net.py \
+    --config-path ../configs \
     --config-name ranking_finetune \
     data.ranking_train_set="$RANKING_TRAIN_SET" \
     data.ranking_val_set="$RANKING_VAL_SET" \

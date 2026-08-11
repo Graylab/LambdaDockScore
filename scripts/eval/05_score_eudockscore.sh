@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:3
 #SBATCH --cpus-per-gpu=16
 #SBATCH --time=72:00:00
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 #SBATCH --output=slogs/score_eudockscore_%j.out
 #SBATCH --error=slogs/score_eudockscore_%j.err
 
@@ -15,14 +15,15 @@ mkdir -p slogs
 conda activate newEnv
 
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=$PYTHONPATH:/scratch/jgray21/rzhu41/eudockscore/src
+export PYTHONPATH="$PYTHONPATH:${EUDOCKSCORE_SRC:-../eudockscore/src}"
 
 # --- Configuration ---
-EXTRACTED_DIR="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/capri_decoys_extracted"
-TARGET_LIST="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/filtered_capri_targets_list/nonoverlapping_with_dips_complexes.txt"
-LMDB_DIR="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/eudockscore_lmdb"
-OUTPUT_DIR="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/capri_score_set_eudockscore_results"
-EUDOCKSCORE_RUN_SCRIPT="/scratch/jgray21/rzhu41/684/eudockscore_run/run_eudockscore_data.py"
+EXTRACTED_DIR="${EXTRACTED_DIR:-capri_decoys_extracted}"
+TARGET_LIST="${TARGET_LIST:-filtered_capri_targets_list/nonoverlapping_with_dips_complexes.txt}"
+LMDB_DIR="${LMDB_DIR:-eudockscore_lmdb}"
+OUTPUT_DIR="${OUTPUT_DIR:-capri_score_set_eudockscore_results}"
+# EuDockScore's own runner script (from the eudockscore package).
+EUDOCKSCORE_RUN_SCRIPT="${EUDOCKSCORE_RUN_SCRIPT:-../eudockscore/run_eudockscore_data.py}"
 
 mkdir -p "$OUTPUT_DIR"
 

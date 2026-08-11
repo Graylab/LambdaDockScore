@@ -134,6 +134,12 @@ sbatch scripts/data_gen/dpo_data_gen.sh
 The generated decoy dataset (~2.9M poses) is far too large to distribute; the
 scripts regenerate it from DIPS-hetero.
 
+See `scripts/README.md` for the full data-generation, training, and scoring
+pipelines, including every configurable path and how to build the train/val
+manifests. The scripts use repo-relative paths (override `REPO_ROOT`, `DATA_ROOT`,
+`DFMDOCK_SRC`, `EUDOCKSCORE_SRC`, `WORKDIR`, etc.) and SLURM directives you will
+need to adapt to your cluster.
+
 ---
 
 ## Citation

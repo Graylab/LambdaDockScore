@@ -5,14 +5,15 @@
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-gpu=16
 #SBATCH --time=36:00:00
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 #SBATCH --job-name=extract_decoys
 #SBATCH --output=slogs/extract_decoys_%j.out
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
 # Change to the working directory
-cd /scratch/jgray21/rzhu41/eudockscore_versus_dfmdock
+# Working dir holding the CAPRI uploader files and intermediates (override to relocate).
+cd "${WORKDIR:-.}"
 
 # --- Configuration ---
 TARGET_LIST="filtered_capri_targets_list/nonoverlapping_with_dips_complexes.txt"

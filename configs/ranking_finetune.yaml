@@ -13,7 +13,7 @@ ranking_conf:
   use_esm: True
   val_check_interval: 0.1
   ckpt_path: null
-  output_dir: /scratch/jgray21/rzhu41/DFMDock/checkpoints/ranking_finetune_ckpts
+  output_dir: checkpoints/ranking_finetune_ckpts  # overridden by ranking_finetune.sh
   lr: 1e-4
   weight_decay: 0.0
   ranking_loss_weight: 0.5

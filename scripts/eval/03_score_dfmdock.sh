@@ -5,7 +5,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --cpus-per-gpu=16
 #SBATCH --time=72:00:00
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 
 # Parse part number argument (1-6)
 if [ $# -ne 1 ]; then
@@ -30,16 +30,17 @@ conda init
 conda activate newEnv
 
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
-export PYTHONPATH=$PYTHONPATH:/scratch/jgray21/rzhu41/eudockscore/src
+export PYTHONPATH="$PYTHONPATH:${EUDOCKSCORE_SRC:-../eudockscore/src}"
 
-TARGET_LIST="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/filtered_capri_targets_list/segmented_into_six/part_${PART_NUM}.txt"
+# List of CAPRI target IDs to score; part_N.txt are six shards for parallel jobs.
+TARGET_LIST="${TARGET_LIST:-filtered_capri_targets_list/segmented_into_six/part_${PART_NUM}.txt}"
 UPLOADER_DIR="uploaders/database"
 EXTRACTED_DIR="capri_decoys_extracted"
 METADATA_FILE="${EXTRACTED_DIR}/decoy_metadata.json"
 PT_DIR="dfmdock_pt_files"
-FINETUNED_CHECKPOINT="/scratch/jgray21/rzhu41/DFMDock/checkpoints/test_ckpts/dips_hetero/308593_epoch_36-step_99197.ckpt"
-BASELINE_CHECKPOINT="/scratch/jgray21/rzhu41/DFMDock/checkpoints/test_ckpts/dips_hetero/model_0.ckpt"
-DFMDOCK_SCORES="/scratch/jgray21/rzhu41/eudockscore_versus_dfmdock/capri_score_set_results/dfmdock_scores_part_${PART_NUM}.csv"
+FINETUNED_CHECKPOINT="${FINETUNED_CHECKPOINT:-../../checkpoints/lambdadockscore.ckpt}"
+BASELINE_CHECKPOINT="${BASELINE_CHECKPOINT:-../../checkpoints/dfmdock_baseline.ckpt}"
+DFMDOCK_SCORES="${DFMDOCK_SCORES:-capri_score_set_results/dfmdock_scores_part_${PART_NUM}.csv}"
 EUDOCKSCORE_LMDB_DIR="eudockscore_lmdb"
 EUDOCKSCORE_SCORES_DIR="eudockscore_scores"
 

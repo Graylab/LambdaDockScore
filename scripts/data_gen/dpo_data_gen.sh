@@ -4,17 +4,15 @@
 #SBATCH --cpus-per-gpu=16
 #SBATCH --partition=a100
 #SBATCH --gres=gpu:4
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 #SBATCH --time=10:00:00
-#SBATCH --error=/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_dpo_data_gen_debug/%j.err
-#SBATCH --output=/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_dpo_data_gen_debug/%j.out
+#SBATCH --error=slogs/dpo_data_gen_%j.err
+#SBATCH --output=slogs/dpo_data_gen_%j.out
 
-# Change to the directory this script is in
-BASE_DIR="/scratch/jgray21/rzhu41/DFMDock"
-cd "${BASE_DIR}"
-
-# Create logs directory if it doesn't exist
-mkdir -p /scratch/jgray21/rzhu41/DFMDock/slogs/slogs_dpo_data_gen_debug
+# Repo root: defaults to two levels up from this script; override REPO_ROOT to relocate.
+REPO_ROOT="${REPO_ROOT:-$(cd "$(dirname "$0")/../.." && pwd)}"
+cd "$REPO_ROOT"
+mkdir -p slogs
 
 # Set default values using relative paths
 CKPT_DIR="checkpoints/test_ckpts"                            # Checkpoint directory
@@ -28,8 +26,9 @@ POSE_DATASET="db5_all"                     # Dataset to sample from for generati
 SAMPLE_POSE_SET=-1                                       # Number of samples to use from the pose set (if -1, then use all. if >-1, then we are just generating data for a subset for debugging)
 POSE_SET_SUBSET_INDICES='[168,253]' #[0,2681], '[2681,5362]', [5362,8043], [8043,10724]  #Break DIPS pose set into four segments, [-1,-1] for smaller datasets that don't need subsetting
 
-# Output directory for generated data
-OUTPUT_DIR="/scratch/jgray21/rzhu41/DFMDock2/data/DockDPO/${SLURM_JOB_ID}_${TRAIN_SET}_${MODEL}_${POSE_DATASET}/run${RUN}"  # Output directory for DPO data
+# Output directory for generated data (override DATA_ROOT to relocate)
+DATA_ROOT="${DATA_ROOT:-data/DockDPO}"
+OUTPUT_DIR="${DATA_ROOT}/${SLURM_JOB_ID}_${TRAIN_SET}_${MODEL}_${POSE_DATASET}/run${RUN}"  # generated decoy poses
 
 # Perturbation parameters
 MAX_TRANSLATION='[0.1,1.0,2.5]'                                          # Max translation for GT perturbation

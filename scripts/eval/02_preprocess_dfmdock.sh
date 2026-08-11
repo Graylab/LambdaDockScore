@@ -5,22 +5,23 @@
 #SBATCH --gres=gpu:4
 #SBATCH --cpus-per-gpu=16
 #SBATCH --time=36:00:00
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 #SBATCH --job-name=preprocess_dfmdock
 #SBATCH --output=slogs/preprocess_dfmdock_%j.out
 
 set -e # Exit immediately if a command exits with a non-zero status.
 
 # Change to the working directory
-cd /scratch/jgray21/rzhu41/eudockscore_versus_dfmdock
+cd "${WORKDIR:-.}"
 
 # --- Environment Setup ---
 # Set TORCH_HOME to a directory on the scratch space to avoid filling up the home directory
-export TORCH_HOME="/scratch/jgray21/rzhu41/.cache/torch"
+export TORCH_HOME="${TORCH_HOME:-$HOME/.cache/torch}"
 mkdir -p $TORCH_HOME
 
 # Ensure DFMDock sources are discoverable
-export PYTHONPATH="/scratch/jgray21/rzhu41/DFMDock/src:${PYTHONPATH}"
+# Path to a DFMDock source checkout (provides the model code).
+export PYTHONPATH="${DFMDOCK_SRC:-../DFMDock/src}:${PYTHONPATH}"
 
 # --- Configuration ---
 EXTRACTED_DIR="capri_decoys_extracted"

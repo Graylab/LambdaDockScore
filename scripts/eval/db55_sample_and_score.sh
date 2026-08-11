@@ -4,13 +4,14 @@
 #SBATCH --cpus-per-gpu=16
 #SBATCH --partition=a100,h100
 #SBATCH --gres=gpu:1
-#SBATCH --account=jgray21
+#SBATCH --account=[insert your SLURM account]
 #SBATCH --time=48:00:00
-#SBATCH --error=/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_test/%j.err
-#SBATCH --output=/scratch/jgray21/rzhu41/DFMDock/slogs/slogs_test/%j.out
+#SBATCH --error=slogs/db55_sample_and_score_%j.err
+#SBATCH --output=slogs/db55_sample_and_score_%j.out
 
 # Change to the directory this script is in
-BASE_DIR="/scratch/jgray21/rzhu41/DFMDock"
+# DFMDock source checkout with the sampler (override to relocate).
+BASE_DIR="${DFMDOCK_SRC:-../DFMDock}"
 cd "${BASE_DIR}"
 
 # Set default values using relative paths
