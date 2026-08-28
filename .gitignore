@@ -21,3 +21,32 @@ docs/README_original_draft.md
 # CAPRI-by-type analysis is not part of the paper -- kept locally, not published
 analysis/capri_by_type.py
 analysis/make_capri_type_template.py
+
+# legacy local-only modules/configurations removed from the public project
+configs/callbacks/paramfreezer.yaml
+configs/config.yaml
+configs/datamodule/default.yaml
+configs/datamodule/docking_datamodule.yaml
+configs/datamodule/pinder_datamodule.yaml
+configs/dpo_finetune.yaml
+configs/energy_finetune.yaml
+configs/logger/wandb.yaml
+configs/mode/default.yaml
+configs/model/DFMDock.yaml
+configs/model/DFMDock_guide.yaml
+configs/model/force_model.yaml
+configs/model/score_model_mlsb.yaml
+configs/trainer/default.yaml
+src/datasets/docking_dataset.py
+src/datasets/pinder_dataset.py
+src/datasets/ppi_dataset.py
+src/datasets/submit_cpu.sh
+src/models/DFMDock.py
+src/models/egnn_net.py
+src/models/score_model.py
+src/models/score_net.py
+src/utils/crop.py
+src/utils/frame.py
+src/utils/loss.py
+src/inference_mlsb_Ranking_Net.py
+src/ranking_model_comparisons.py
