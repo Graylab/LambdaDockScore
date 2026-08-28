@@ -12,7 +12,7 @@
 mkdir -p slogs
 
 # Activate conda environment if needed
-conda activate newEnv
+conda activate lambdadockscore
 
 export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 export PYTHONPATH="$PYTHONPATH:${EUDOCKSCORE_SRC:-../eudockscore/src}"
