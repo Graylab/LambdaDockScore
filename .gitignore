@@ -50,3 +50,8 @@ src/utils/frame.py
 src/utils/loss.py
 src/inference_mlsb_Ranking_Net.py
 src/ranking_model_comparisons.py
+
+# local figure scripts kept locally, not published
+analysis/make_paper_figures_OLD.py
+analysis/generate_sept2026_figures.py
+analysis/generate_sept2026_figures_OLD.py
