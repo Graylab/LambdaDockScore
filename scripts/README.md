@@ -6,9 +6,10 @@ cluster and contain **absolute paths** (e.g. `/scratch/jgray21/rzhu41/...`) and
 `#SBATCH` directives (`--account=[insert your SLURM account]`, partitions `a100,h100`, etc.). Edit the
 paths, the account, and the partitions for your own environment before running.
 
-The published figures in this repo can be regenerated **without** any of these
-scripts — they only read the CSVs in `results/` (see the top-level `README.md`).
-These scripts are provided for full provenance and to retrain/re-score from scratch.
+The published figures in this repository can be regenerated without these
+scripts, as figure generation reads directly from the CSV files in `results/`
+(see the top-level `README.md`). These scripts are provided for reproducibility
+and to support retraining or scoring from scratch.
 
 ## `data_gen/` — build the fine-tuning decoy set
 
@@ -40,7 +41,7 @@ generated set (~2.9M poses) is too large to distribute.
 
 **Building the train/val manifests.** `data_gen/` writes one
 `individual_poses.json` per complex (pose `.pt` paths + their DockQ). `Ranking_Net.py`
-instead expects a single JSON *list*, one entry per complex, in this schema:
+instead expects a single JSON list, one entry per complex, in this schema:
 
 ```json
 [
@@ -53,7 +54,7 @@ instead expects a single JSON *list*, one entry per complex, in this schema:
 Concatenate the per-complex `data_gen` outputs into that shape and split the list
 of complexes into train and validation partitions to produce the two JSON files.
 
-Set `WANDB_API_KEY` in your shell before submitting (the script no longer hard-codes it).
+Set `WANDB_API_KEY` in your shell before submitting.
 Key hyperparameters are the `LR`, `RANKING_LOSS_WEIGHT`, `NUM_RANKING_POSES`,
 `BUCKETS`, and `CROP_SIZE` variables near the top of the script.
 
