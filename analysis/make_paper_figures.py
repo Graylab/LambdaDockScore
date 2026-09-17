@@ -1,6 +1,6 @@
 """Regenerate paper figures and bar height tables from the per-pose result CSVs in results/.
 
-    python analysis/make_paper_figures.py --outdir figures/sept2026_version
+    python analysis/make_paper_figures.py --outdir figures
 
 Produces SVG figures:
   fig1_capri_topk.svg        Figure 1  - CAPRI score set, 3 models, top-1/top-5 (50% cutoff, no number labels)
@@ -294,7 +294,7 @@ def build_markdown_report(fig1_data, fig2_data, fig3_data, figS2_data) -> str:
 
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description="Regenerate paper figures and bar height tables.")
-    ap.add_argument("--outdir", default=os.path.join(D.REPO, "figures", "sept2026_version"))
+    ap.add_argument("--outdir", default=os.path.join(D.REPO, "figures"))
     ap.add_argument("--n_boot", type=int, default=10_000)
     ap.add_argument("--only", nargs="*", choices=["1", "2", "3", "S2", "panels"])
     a = ap.parse_args()
