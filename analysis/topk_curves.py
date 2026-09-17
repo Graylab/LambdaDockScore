@@ -115,12 +115,14 @@ if __name__ == "__main__":
     ap.add_argument("--quality", default="Acceptable", choices=list(M.THRESHOLDS))
     ap.add_argument("--panel", action="store_true",
                     help="render a 1x3 High/Medium/Acceptable panel instead of a single quality")
+    ap.add_argument("--format", choices=["svg", "png", "pdf"], default="svg",
+                    help="figure file format (default: svg)")
     ap.add_argument("--outdir", default=os.path.join(D.REPO, "figures"))
     a = ap.parse_args()
     os.makedirs(a.outdir, exist_ok=True)
 
     if a.panel:
-        plot_panel(a.dataset, a.kmax, os.path.join(a.outdir, f"topk_panel_{a.dataset}.png"))
+        plot_panel(a.dataset, a.kmax, os.path.join(a.outdir, f"topk_panel_{a.dataset}.{a.format}"))
         raise SystemExit
 
     curves = build(a.dataset, a.kmax, a.quality)
@@ -130,4 +132,4 @@ if __name__ == "__main__":
     s = summarise(curves)
     s.to_csv(os.path.join(a.outdir, f"topk_summary_{tag}.csv"), index=False)
     print(s.to_string(index=False))
-    plot(curves, a.quality, a.dataset, os.path.join(a.outdir, f"topk_curve_{tag}.png"))
+    plot(curves, a.quality, a.dataset, os.path.join(a.outdir, f"topk_curve_{tag}.{a.format}"))

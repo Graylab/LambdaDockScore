@@ -9,6 +9,11 @@ outputs/
 *.out
 .DS_Store
 .env
+env/
+venv/
+.venv/
+.cache/
+verification_figures/
 # only the published figure sets are committed; local scratch plots are not
 figures/exploratory/
 # unpublished manuscript sources

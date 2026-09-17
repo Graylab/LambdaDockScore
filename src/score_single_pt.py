@@ -77,12 +77,21 @@ def score_single_pt(pt_file, checkpoint_path):
         print(f"Num Clashes: {output['num_clashes'].item()}")
 
 if __name__ == "__main__":
-    pt_file = "/scratch/jgray21/rzhu41/LambdaDockScore/data/example_T025.1_T25_U01.M01.pt"
-    checkpoint_path = "/scratch/jgray21/rzhu41/LambdaDockScore/checkpoints/best_checkpoint.ckpt"
-    
-    if not os.path.exists(pt_file):
-        print(f"Error: File {pt_file} not found.")
-    elif not os.path.exists(checkpoint_path):
-        print(f"Error: Checkpoint {checkpoint_path} not found.")
+    import argparse
+    repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    default_pt = os.path.join(repo_root, "data", "example_T025.1_T25_U01.M01.pt")
+    default_ckpt = os.path.join(repo_root, "checkpoints", "lambdadockscore.ckpt")
+
+    parser = argparse.ArgumentParser(description="Score a single .pt complex pose using a trained checkpoint.")
+    parser.add_argument("--pt_file", default=default_pt, help="Path to input .pt HeteroData pose file")
+    parser.add_argument("--checkpoint", default=default_ckpt, help="Path to model checkpoint (.ckpt)")
+    args = parser.parse_args()
+
+    if not os.path.exists(args.pt_file):
+        print(f"Error: File {args.pt_file} not found.")
+        sys.exit(1)
+    elif not os.path.exists(args.checkpoint):
+        print(f"Error: Checkpoint {args.checkpoint} not found.")
+        sys.exit(1)
     else:
-        score_single_pt(pt_file, checkpoint_path)
+        score_single_pt(args.pt_file, args.checkpoint)
