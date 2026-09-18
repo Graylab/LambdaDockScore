@@ -11,6 +11,8 @@ from datasets.ppi_mlsb_dataset import PPIDataset
 
 def score_single_pt(pt_file, checkpoint_path):
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+    if device.type == "cpu" and torch.get_num_threads() > 8:
+        torch.set_num_threads(int(os.environ.get("OMP_NUM_THREADS", 4)))
     print(f"Using device: {device}")
 
     # Load the model
@@ -79,7 +81,7 @@ def score_single_pt(pt_file, checkpoint_path):
 if __name__ == "__main__":
     import argparse
     repo_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    default_pt = os.path.join(repo_root, "data", "example_T025.1_T25_U01.M01.pt")
+    default_pt = os.path.join(repo_root, "data", "example_T026.1_T26_U20.M01.pt")
     default_ckpt = os.path.join(repo_root, "checkpoints", "lambdadockscore.ckpt")
 
     parser = argparse.ArgumentParser(description="Score a single .pt complex pose using a trained checkpoint.")
